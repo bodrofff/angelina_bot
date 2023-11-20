@@ -26,8 +26,9 @@ def start(message):
     else:
         btn1 = types.KeyboardButton('👀 Предложить идею')
         btn2 = types.KeyboardButton('☎️ Помощь')
-        btn3 = types.KeyboardButton('🥖 Донат на пирожок')
-        markup.add(btn1, btn2, btn3)
+        btn3 = types.KeyboardButton('🧁 Донат на пирожок')
+        btn4 = types.KeyboardButton('🥳 Размешение рекламы')
+        markup.add(btn1, btn2, btn3, btn4)
         bot.send_message(message.chat.id, "Привет", reply_markup=markup)
 
 # Добавленная функция для обработки сообщений пользователей
@@ -69,10 +70,14 @@ def handle_user(message):
             markup.add(btn1, btn2)
             bot.send_message(message.chat.id, "Выход", reply_markup=markup)
 
-        elif message.text == '🥖 Донат на пирожок':
+        elif message.text == '🧁 Донат на пирожок':
             bot.send_message(message.chat.id, "Донат на пирожок для потдержки адмиина можно прислать на карту сбер")
             bot.send_message(message.chat.id, "С сообщением которое вы хотите опубликовать")
             bot.send_message(message.chat.id, "2202 2009 6688 8685")
+
+        elif message.text == '🥳 Размешение рекламы':
+            bot.send_message(message.chat.id, "Pекламу размешает администратор")
+            bot.send_message(message.chat.id, "@navsexpro")
 
         # elif message.text == 'Введите текст':
         elif pending_messages.get(message.chat.id) == 'Введите текст':
