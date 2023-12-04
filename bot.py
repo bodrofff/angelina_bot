@@ -27,7 +27,7 @@ def start(message):
         btn1 = types.KeyboardButton('👀 Предложить идею')
         btn2 = types.KeyboardButton('☎️ Помощь')
         btn3 = types.KeyboardButton('🧁 Донат на пирожок')
-        btn4 = types.KeyboardButton('🥳 Размешение рекламы')
+        btn4 = types.KeyboardButton('📡 Бот')
         markup.add(btn1, btn2, btn3, btn4)
         bot.send_message(message.chat.id, "Привет", reply_markup=markup)
 
@@ -67,16 +67,44 @@ def handle_user(message):
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             btn1 = types.KeyboardButton('👀 Предложить идею')
             btn2 = types.KeyboardButton('☎️ Помощь')
-            markup.add(btn1, btn2)
+            btn3 = types.KeyboardButton('🧁 Донат на пирожок')
+            btn4 = types.KeyboardButton('📡 Бот')
+            markup.add(btn1, btn2, btn3, btn4)
             bot.send_message(message.chat.id, "Выход", reply_markup=markup)
 
         elif message.text == '🧁 Донат на пирожок':
-            bot.send_message(message.chat.id, "Донат на пирожок для потдержки адмиина можно прислать на карту сбер")
+            bot.send_message(message.chat.id, "Донат на пирожок для потдержки админа можно прислать на карту сбер")
             bot.send_message(message.chat.id, "С сообщением которое вы хотите опубликовать")
             bot.send_message(message.chat.id, "2202 2009 6688 8685")
 
-        elif message.text == '🥳 Размешение рекламы':
-            bot.send_message(message.chat.id, "Pекламу размешает администратор")
+        elif message.text == '📡 Бот':
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            btn1 = types.KeyboardButton('Установка бота')
+            btn2 = types.KeyboardButton('Доработать Бота')
+            btn3 = types.KeyboardButton('Выход')
+            btn4 = types.KeyboardButton('Рекламная интеграция')
+            markup.add(btn1, btn2, btn3, btn4)
+            bot.send_message(message.chat.id, "Вы в разделе о размешении бота и дороботки под ваши задачи!", reply_markup=markup)
+
+        elif message.text == 'Установка бота':
+            bot.send_message(message.chat.id, "Бот устанавливается при личном обращении!")
+            bot.send_message(message.chat.id, "По всем вопросам по установке бота обращайтесь к -")
+            bot.send_message(message.chat.id, "@navsexpro")
+
+        elif message.text == 'Доработать Бота':
+            bot.send_message(message.chat.id, "Бот доробатывается под ваши задачи!")
+            bot.send_message(message.chat.id, "Вы должны полностью понимать цель и задачи Вашего бота!!")
+            bot.send_message(message.chat.id, "По всем вопросам обращайтесь к -")
+            bot.send_message(message.chat.id, "@navsexpro")
+
+        elif message.text == 'Рекламная интеграция':
+            bot.send_message(message.chat.id, "Рекламная интеграция происходит в")
+            bot.send_message(message.chat.id, "В Telegram канале, Telegram боте")
+            bot.send_message(message.chat.id, "Кто будет готовить креатив?")
+            bot.send_message(message.chat.id, "1 - Вы сами?\n 2 - Автор площадки?")
+            bot.send_message(message.chat.id, " Формат поста?")
+            bot.send_message(message.chat.id, "1-Репост с вашего канала\n2-Голый текст\n3-Текст + одна картинка")
+            bot.send_message(message.chat.id, "Все данные по статистити и активности предоставляются")
             bot.send_message(message.chat.id, "@navsexpro")
 
         # elif message.text == 'Введите текст':
@@ -86,7 +114,6 @@ def handle_user(message):
                 # Если включен автопостинг, публикуем сообщение сразу
                 bot.send_message(channel_id, message.text)
                 bot.send_message(message.chat.id, "Сообщение опубликовано в канале.")
-                bot.send_message(message.chat.id, "Выход.")
 
                 pending_messages.pop(message.chat.id, None)
             else:
@@ -96,8 +123,6 @@ def handle_user(message):
                     'text': message.text
                 })
                 bot.send_message(message.chat.id, "Сообщение отправлено на модерацию.")
-                bot.send_message(message.chat.id, "Выход.")
-
 
         else:
             bot.send_message(message.chat.id, "Нажмите на 👀 Предложить идею")
@@ -171,34 +196,37 @@ def view_admin_messages(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def handle_inline_buttons(call):
-    # Извлекаем данные из callback_data
-    action, user_id = call.data.split('_') # cancel и id-пользователя
-    user_text = call.message.text  # текст выбранного сообщения
+    try:
+        # Извлекаем данные из callback_data
+        action, user_id = call.data.split('_') # cancel и id-пользователя
+        user_text = call.message.text  # текст выбранного сообщения
 
 
-    if action == "block":
-        pass
-    elif action == "publish":
-        bot.send_message(channel_id, user_text)
+        if action == "block":
+            pass
+        elif action == "publish":
+            bot.send_message(channel_id, user_text)
 
-        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
+            bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
 
-        prev_user_message = next(
-            (msg for msg in user_messages if msg.get('id') == int(user_id) and msg.get('text') == user_text), None)
-        if prev_user_message:
-            user_messages.remove(prev_user_message)
+            prev_user_message = next(
+                (msg for msg in user_messages if msg.get('id') == int(user_id) and msg.get('text') == user_text), None)
+            if prev_user_message:
+                user_messages.remove(prev_user_message)
 
-        bot.send_message(call.message.chat.id, "Сообщение отправлено.")
-    elif action == "cancel":
-        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
+            bot.send_message(call.message.chat.id, "Сообщение отправлено.")
+        elif action == "cancel":
+            bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
 
-        prev_user_message = next(
-            (msg for msg in user_messages if msg.get('id') == int(user_id) and msg.get('text') == user_text), None)
-        if prev_user_message:
-            user_messages.remove(prev_user_message)
+            prev_user_message = next(
+                (msg for msg in user_messages if msg.get('id') == int(user_id) and msg.get('text') == user_text), None)
+            if prev_user_message:
+                user_messages.remove(prev_user_message)
 
-        bot.send_message(call.message.chat.id, "Сообщение отклонено.")
-
+            bot.send_message(call.message.chat.id, "Сообщение отклонено.")
+    except StopIteration:
+        # Если сообщение удалено выбрасывать сообшение
+        bot.send_message(call.message.chat.id, "Сообщение уже удалено или отправлено другим админом.")
 
 if __name__ == '__main__':
     bot.delete_webhook()
