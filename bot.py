@@ -1,9 +1,12 @@
+
 import telebot
 from telebot import types
 
-from config import token, admin_ids, channel_id, admin_chat_id
+from config import token, admin_ids, channel_id, admin_chat_id, my_email, my_email_pass, my_email_pass_one
+
 
 bot = telebot.TeleBot(token)
+
 
 admin_ids = admin_ids
 admin_chat_id = admin_chat_id
@@ -14,6 +17,8 @@ user_messages = []  # Хранение сообщений от пользова�
 pending_messages = {}
 # Флаг для отслеживания состояния автопостинга
 autoposting_enabled = False
+
+
 
 # Обработка команды /start
 @bot.message_handler(commands=['start'])
@@ -34,8 +39,6 @@ def start(message):
 # Добавленная функция для обработки сообщений пользователей
 @bot.message_handler(func=lambda message: True)
 def handle_user(message):
-    # print(pending_messages)
-    # print("Received text message:", message.text)
     if message.from_user.id in admin_ids:
         handle_admin(message)
     else:
@@ -55,10 +58,12 @@ def handle_user(message):
             bot.send_message(message.chat.id, "Помощь", reply_markup=markup)
 
         elif message.text == '❓ Как предложить идею':
-            bot.send_message(message.chat.id, "Как предложить идею: чтобы предложить идею, зайдите в бота, снизу появятся две кнопки, одна из них будет 'Предложить идею'. Нажмите на нее и пишите текст, который мы в скором времени выложим :)")
+            bot.send_message(message.chat.id,
+                             "Как предложить идею: чтобы предложить идею, зайдите в бота, снизу появятся две кнопки, одна из них будет 'Предложить идею'. Нажмите на нее и пишите текст, который мы в скором времени выложим :)")
 
         elif message.text == '🥴 Что делать если я забанен':
-            bot.send_message(message.chat.id, "Если вы забанены, ничего сделать нельзя, так как вы нарушили правила канала!")
+            bot.send_message(message.chat.id,
+                             "Если вы забанены, ничего сделать нельзя, так как вы нарушили правила канала!")
 
         elif message.text == '🤝 Другой вопрос':
             bot.send_message(message.chat.id, "В описании профиля, перейдите на вторую ссылку в анонимном боте.")
@@ -84,7 +89,8 @@ def handle_user(message):
             btn3 = types.KeyboardButton('Выход')
             btn4 = types.KeyboardButton('Рекламная интеграция')
             markup.add(btn1, btn2, btn3, btn4)
-            bot.send_message(message.chat.id, "Вы в разделе о размешении бота и дороботки под ваши задачи!", reply_markup=markup)
+            bot.send_message(message.chat.id, "Вы в разделе о размешении бота и дороботки под ваши задачи!",
+                             reply_markup=markup)
 
         elif message.text == 'Установка бота':
             bot.send_message(message.chat.id, "Бот устанавливается при личном обращении!")
@@ -127,7 +133,6 @@ def handle_user(message):
         else:
             bot.send_message(message.chat.id, "Нажмите на 👀 Предложить идею")
             bot.send_message(message.chat.id, "Введите текст и отправить.")
-
 
 
 @bot.message_handler(func=lambda message: message.from_user.id in admin_ids)
@@ -228,6 +233,15 @@ def handle_inline_buttons(call):
         # Если сообщение удалено выбрасывать сообшение
         bot.send_message(call.message.chat.id, "Сообщение уже удалено или отправлено другим админом.")
 
+
+
 if __name__ == '__main__':
-    bot.delete_webhook()
-    bot.polling(none_stop=True)
+    while True:
+        try:
+            bot.delete_webhook()
+            bot.polling(none_stop=True)
+        except Exception as e:
+
+            error_message = f"Произошла ошибка: {str(e)}"
+            with open("error_log.txt", "a") as file:
+                file.write(error_message + "\n")
