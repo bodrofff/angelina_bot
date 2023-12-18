@@ -2,7 +2,7 @@
 import telebot
 from telebot import types
 
-from config import token, admin_ids, channel_id, admin_chat_id, my_email, my_email_pass, my_email_pass_one
+from config import token, admin_ids, channel_id, admin_chat_id
 
 
 bot = telebot.TeleBot(token)
